@@ -1,0 +1,1 @@
+http://var2.astro.cz/ETD/predictions.php?delka=1&submit=submit&sirka=42
