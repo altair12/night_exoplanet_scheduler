@@ -23,5 +23,7 @@ class Sun(object):
         url = "{}/json?lat={}&lng={}&date={}".format(Sun.URL,
                                                      self.latitude,
                                                      self.longitude,
-                                                     self.date)
+                                                     "{}-{}-{}".format(self.date.year,
+                                                                       self.date.month,
+                                                                       self.date.day))
         return requests.get(url=url)

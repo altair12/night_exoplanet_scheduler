@@ -4,16 +4,23 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import pytest
+import datetime
 
 from mock import patch
 
 from night_scheduler.framework.sun.sun import Sun
 
 
+class FakeDateTime(object):
+    year = 9999
+    month = 1
+    day = 1
+
+
 class TestSun(object):
     FAKE_LATITUDE = "00"
     FAKE_LONGITUDE = "11"
-    FAKE_DATE = "YYYY-MM-DD"
+    FAKE_DATE = FakeDateTime()
     FAKE_SUNSET = "99:88:77 PM"
     FAKE_SUNRISE_SUNSERT_ORG_ANSWER = {
         "results": {
@@ -54,10 +61,15 @@ class TestSun(object):
             Sun.URL,
             TestSun.FAKE_LATITUDE,
             TestSun.FAKE_LONGITUDE,
-            TestSun.FAKE_DATE
+            "{}-{}-{}".format(TestSun.FAKE_DATE.year,
+                              TestSun.FAKE_DATE.month,
+                              TestSun.FAKE_DATE.day)
         ))
 
     def test__get_sunset__no_params__retuns_sunset_hour(self):
         sunset = self.sun.get_sunset()
 
         assert sunset == TestSun.FAKE_SUNSET
+
+
+
