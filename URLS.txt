@@ -1,1 +1,50 @@
 http://var2.astro.cz/ETD/predictions.php?delka=1&submit=submit&sirka=42
+
+
+
+16-02-2017 --> 18:28 --> 19:56 (flat R) -- 36
+17-02-2017 --> 18:29 --> 18:57 (flat R) -- 36
+23-05-2017 --> 21:14 --> 21:44 (flat R) -- 30
+
+Sunrise and sunset:
+hi ha modul python tb: ephem
+https://sunrise-sunset.org/api
+https://api.sunrise-sunset.org/json?lat=41.7026974&lng=1.4888376
+https://api.sunrise-sunset.org/json?lat=41.7026974&lng=1.4888376&date=2017-05-23
+
+
+
+
+21:39
+
+22:10 __ 20:10 -- 21:10
+
+HAT-P-5 b
+
+21:43
+41°,E	23.05. 23:11
+57°,E	0:38
+73°,E	175	12	0.0142	54241.77663+2.788474*E
+RA: 18 17 37.30
+DE: +36 37 16.6
+
+
+
+desplaçament molt gran
+
+414 527
+409 529  -5 +2
+407 530  -2 +1
+
+Fer un millor mapa del cel i millorar el protrack, es pot centrar millor la muntura en un dels eixos
+
+
+
+PROBLEMES:
+- cupula no trova la home
+- cupula linkada al telescopi per els flats
+- flats sense traking, sembla que un moviment fa que torni a fer traking però que no es marqui al thesky (provar)
+- cupula falla als 20º i programa es bloqueja tan ascom com el propi
+- cupula de vegades es queda com clavat si no tens el ASCOm davant de tot
+- cupula bloquejada a 139 però es tanca i fa tot be excepte girar
+- internet lent
