@@ -12,20 +12,28 @@ from night_scheduler.framework.sun.sun import Sun
 
 
 class FakeDateTime(object):
-    year = 9999
-    month = 1
-    day = 1
+    def __init__(self):
+        self.year = 9999
+        self.month = 1
+        self.day = 1
+        self.tm_isdst = 1
+
+    def set_summer(self):
+        self.tm_isdst = 1
+
+    def set_winter(self):
+        self.tm_isdst = 0
 
 
-class TestSun(object):
+class TestSunShoud(object):
     FAKE_LATITUDE = "00"
     FAKE_LONGITUDE = "11"
-    FAKE_DATE = FakeDateTime()
-    FAKE_SUNSET = "99:88:77 PM"
+    FAKE_SUNSET_SUMMER = "21:00:00"
+    FAKE_SUNSET_WINTER = "20:00:00"
     FAKE_SUNRISE_SUNSERT_ORG_ANSWER = {
         "results": {
             "sunrise": "4:26:42 AM",
-            "sunset": "99:88:77 PM",
+            "sunset": "7:00:00 PM",
             "solar_noon": "11:50:51 AM",
             "day_length": "14:48:18",
             "civil_twilight_begin": "3:54:08 AM",
@@ -43,33 +51,45 @@ class TestSun(object):
         self.patcher_requests_get = patch('requests.get')
 
         self.mock_requests_get = self.patcher_requests_get.start()
-        self.mock_requests_get.return_value = TestSun.FAKE_SUNRISE_SUNSERT_ORG_ANSWER
+        self.mock_requests_get.return_value = TestSunShoud.FAKE_SUNRISE_SUNSERT_ORG_ANSWER
 
-        self.sun = Sun(latitude=TestSun.FAKE_LATITUDE,
-                       longitude=TestSun.FAKE_LONGITUDE,
-                       date=TestSun.FAKE_DATE)
+        self.fake_date = FakeDateTime()
+        self.sun = Sun(latitude=TestSunShoud.FAKE_LATITUDE,
+                       longitude=TestSunShoud.FAKE_LONGITUDE,
+                       date=self.fake_date)
+
+        self.fake_date_winter = FakeDateTime()
+        self.fake_date_winter.set_winter()
+        self.sun_winnter = Sun(latitude=TestSunShoud.FAKE_LATITUDE,
+                               longitude=TestSunShoud.FAKE_LONGITUDE,
+                               date=self.fake_date_winter)
 
     @classmethod
     def teardown_method(self, method):
         self.mock_requests_get = self.patcher_requests_get.stop()
 
     # ##############################################################################################
-    def test__get_sunset__no_params__calou_and_today_called(self):
+    def test__get_sunset__call_the_api_with_correct_data_and_location(self):
         self.sun.get_sunset()
 
         self.mock_requests_get.assert_called_once_with(url="{}/json?lat={}&lng={}&date={}".format(
             Sun.URL,
-            TestSun.FAKE_LATITUDE,
-            TestSun.FAKE_LONGITUDE,
-            "{}-{}-{}".format(TestSun.FAKE_DATE.year,
-                              TestSun.FAKE_DATE.month,
-                              TestSun.FAKE_DATE.day)
+            TestSunShoud.FAKE_LATITUDE,
+            TestSunShoud.FAKE_LONGITUDE,
+            "{}-{}-{}".format(TestSunShoud.fake_date.year,
+                              TestSunShoud.fake_date.month,
+                              TestSunShoud.fake_date.day)
         ))
 
-    def test__get_sunset__no_params__retuns_sunset_hour(self):
+    def test__get_sunset__returns_sunset_hour_in_24h_and_local_format_summer(self):
         sunset = self.sun.get_sunset()
 
-        assert sunset == TestSun.FAKE_SUNSET
+        assert sunset == TestSunShoud.FAKE_SUNSET_SUMMER
+
+    def test__get_sunset__returns_sunset_hour_in_24h_and_local_format_winter(self):
+        sunset = self.sun_winnter.get_sunset()
+
+        assert sunset == TestSunShoud.FAKE_SUNSET_WINTER
 
 
 
